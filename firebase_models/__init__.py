@@ -8,4 +8,6 @@ os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = credentials_path
 storage_client = storage.Client()
 
 from firebase_models.places import Place
-from firebase_models.users import User, Comments, Date
+from firebase_models.users import User
+from firebase_models.date import Date
+from firebase_models.comment import Comment

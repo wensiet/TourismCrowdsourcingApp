@@ -8,45 +8,46 @@ class Place(Model):
     title: TextField = TextField()
     rating: NumberField = NumberField()
     description: TextField = TextField()
-    interacted_users: ListField = ListField()
-    geo_data: GeoPoint = GeoPoint()
+    users_ids: ListField = ListField()
+    geo_point: GeoPoint = GeoPoint()
     approved: BooleanField = BooleanField()
-    photo_links: ListField = ListField()
+    image_references: ListField = ListField()
 
     def __init__(
             self,
             title: str = None,
             rating: float = None,
             description: str = None,
-            interacted_users: List[str] = None,
-            geo_data: GP = None,
+            user_ids: List[str] = None,
+            geo_point: GP = None,
             approved: bool = None,
-            photo_links: List[str] = None,
+            image_references: List[str] = None,
             **kwargs
     ):
         super().__init__(**kwargs)
         self.title = title
         self.rating = rating
         self.description = description
-        self.interacted_users = interacted_users
-        self.geo_data = geo_data
+        self.users_ids = user_ids
+        self.geo_point = geo_point
         self.approved = approved
-        self.photo_links = photo_links
+        self.image_references = image_references
 
     def __repr__(self):
         return f"Place(title={self.title}, rating={self.rating}, description={self.description}, " \
-               f"interacted_users={self.interacted_users}, geo_data={self.geo_data.latitude} {self.geo_data.longitude}, " \
-               f"approved={self.approved}, photo_links={self.photo_links})"
+               f"interacted_users={self.users_ids}, geo_data={self.geo_point} {self.geo_point}, " \
+               f"approved={self.approved}, photo_links={self.image_references})"
 
     def to_dict(self):
         result = {
+            "id": self.id,
             "title": self.title,
             "rating": self.rating,
             "description": self.description,
-            "interacted_users": self.interacted_users,
-            "geo_data": [self.geo_data.latitude, self.geo_data.longitude],
+            "interacted_users": self.users_ids,
+            "geo_data": f"{self.geo_point.latitude}, {self.geo_point.longitude}",
             "approved": self.approved,
-            "photo_links": self.photo_links
+            "photo_links": self.image_references
         }
 
         return result

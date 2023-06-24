@@ -1,4 +1,5 @@
-from firebase_models import Place, User, Date, Comments
+from firebase_models import Place, User, Date, Comment
+import json
 
 
 def parse_place(data: dict) -> Place:
@@ -26,30 +27,23 @@ def parse_user(data: dict) -> User:
     surname = data["surname"]
     email = data["email"]
     gender = bool(data["gender"])
-    birth_date = map(int, data["birthDate"].split(" "))
+    birth_date = list(map(int, data["birth_date"].split(" ")))
     password = data["password"]
     status = data["status"]
-    users_score = float(data["usersScore"])
-    print(data["comments"])
-    comments = [dict(x) if len(x) > 0 else {} for x in data["comments"].split(" ")]
+    users_score = float(data["users_score"])
+    # comments = [Comment(**el) for el in json.loads(data["comments"])]
+    comments_json = json.loads(data["comments"])
+    comments = []
+    for el in comments_json:
+        comments.append(Comment(**el))
 
     queried_user = User(name=name,
                         surname=surname,
                         email=email,
                         gender=gender,
-                        birthDate=Date(*birth_date),
+                        birth_date=Date(year=birth_date[0], month=birth_date[1], day=birth_date[2]),
                         password=password,
                         status=status,
-                        usersScore=users_score,
-                        comments=Comments(comments))
+                        users_score=users_score,
+                        comments=comments)
     return queried_user
-
-# email: TextField = TextField()
-#     name: TextField = TextField()
-#     surname: TextField = TextField()
-#     gender: BooleanField = BooleanField()
-#     birthDate: Date = Date()
-#     password: TextField = TextField()
-#     status: TextField = TextField()
-#     usersScore: NumberField = NumberField()
-#     comments: Comment = Comment()

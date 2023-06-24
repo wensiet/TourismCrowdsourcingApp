@@ -1,1 +1,3 @@
-from Util.parser import parse_place
+from Util.parser import *
+from Util.authorization import *
+from Util.coordinates import *
