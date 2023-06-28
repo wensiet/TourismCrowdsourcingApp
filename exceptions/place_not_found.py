@@ -1,0 +1,2 @@
+class PlaceNotFound(Exception):
+    pass
