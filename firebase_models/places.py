@@ -2,7 +2,6 @@ from fireo.models import Model
 from fireo.fields import TextField, ListField, NumberField, BooleanField, GeoPoint
 from google.cloud.firestore_v1._helpers import GeoPoint as GP
 from typing import List
-from validators import places_init_validator
 
 
 class Place(Model):
@@ -14,7 +13,6 @@ class Place(Model):
     approved: BooleanField = BooleanField()
     image_references: ListField = ListField()
 
-    @places_init_validator
     def __init__(
             self,
             title: str = None,
