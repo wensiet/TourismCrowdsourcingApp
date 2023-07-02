@@ -1,5 +1,5 @@
 from . import app
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, FileResponse, StreamingResponse
 from firebase_models import Place, User
 from fastapi import Request, Form, Depends, File
 from Util import create_user, parse_user, authenticate_user, create_access_token, get_current_user, \
@@ -57,6 +57,17 @@ async def get_images(place_id: str):
     return result
 
 
+@app.get("/get-images-list/{place_id}")
+async def get_images(place_id: str):
+    result = {
+        "image_ref": []
+    }
+    for b in bucket.list_blobs(prefix=place_id):
+        filename = str(b.name)
+        result["image_ref"].append(filename[filename.find("/") + 1:len(filename)])
+    return result
+
+
 @app.get("/get-place/{place_id}")
 async def get_place_by_name(place_id: str):
     # Executing the query
@@ -66,6 +77,19 @@ async def get_place_by_name(place_id: str):
 
     for p in places_query:
         return p.to_dict()
+
+
+@app.get("/images/{place_id}/{image_name}")
+async def image_by_place_id(place_id: str, image_name: str):
+    for b in bucket.list_blobs(prefix=place_id):
+        byte_file = b.download_as_bytes()
+        filename = str(b.name)
+        current_name = filename[filename.find("/") + 1:len(filename)]
+        if current_name == image_name:
+            async def stream_image():
+                yield byte_file
+
+            return StreamingResponse(stream_image(), media_type=b.content_type)
 
 
 @app.post("/add-user")

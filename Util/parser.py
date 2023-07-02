@@ -31,7 +31,6 @@ def parse_user(data: dict) -> User:
     password = data["password"]
     status = data["status"]
     users_score = float(data["users_score"])
-    # comments = [Comment(**el) for el in json.loads(data["comments"])]
     comments_json = json.loads(data["comments"])
     comments = []
     for el in comments_json:

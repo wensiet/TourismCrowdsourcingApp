@@ -2,6 +2,7 @@ from fireo.models import Model, NestedModel
 from fireo.fields import TextField, NumberField, BooleanField, ListField
 from firebase_models.date import Date
 from firebase_models.comment import Comment
+from validators import users_init_validator
 
 
 class User(Model):
@@ -15,6 +16,7 @@ class User(Model):
     users_score: NumberField = NumberField()
     comments: ListField = ListField(NestedModel(Comment))
 
+    @users_init_validator
     def __init__(
             self,
             email=None,

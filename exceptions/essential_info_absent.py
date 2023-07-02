@@ -1,0 +1,2 @@
+class EssentialInfoAbsent(Exception):
+    pass

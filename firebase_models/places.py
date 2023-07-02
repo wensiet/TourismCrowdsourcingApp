@@ -2,17 +2,19 @@ from fireo.models import Model
 from fireo.fields import TextField, ListField, NumberField, BooleanField, GeoPoint
 from google.cloud.firestore_v1._helpers import GeoPoint as GP
 from typing import List
+from validators import places_init_validator
 
 
 class Place(Model):
     title: TextField = TextField()
     rating: NumberField = NumberField()
     description: TextField = TextField()
-    users_ids: ListField = ListField()
+    user_ids: ListField = ListField(TextField())
     geo_point: GeoPoint = GeoPoint()
     approved: BooleanField = BooleanField()
     image_references: ListField = ListField()
 
+    @places_init_validator
     def __init__(
             self,
             title: str = None,
@@ -28,14 +30,14 @@ class Place(Model):
         self.title = title
         self.rating = rating
         self.description = description
-        self.users_ids = user_ids
+        self.user_ids = user_ids
         self.geo_point = geo_point
         self.approved = approved
         self.image_references = image_references
 
     def __repr__(self):
         return f"Place(title={self.title}, rating={self.rating}, description={self.description}, " \
-               f"interacted_users={self.users_ids}, geo_data={self.geo_point} {self.geo_point}, " \
+               f"user_ids={self.user_ids}, geo_point={self.geo_point.latitude} {self.geo_point.longitude}, " \
                f"approved={self.approved}, photo_links={self.image_references})"
 
     def to_dict(self):
@@ -44,8 +46,8 @@ class Place(Model):
             "title": self.title,
             "rating": self.rating,
             "description": self.description,
-            "interacted_users": self.users_ids,
-            "geo_data": f"{self.geo_point.latitude}, {self.geo_point.longitude}",
+            "user_ids": self.user_ids,
+            "geo_point": f"{self.geo_point.latitude}, {self.geo_point.longitude}",
             "approved": self.approved,
             "photo_links": self.image_references
         }
