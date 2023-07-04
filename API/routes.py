@@ -1,7 +1,7 @@
 from . import app
 from fastapi.responses import JSONResponse, FileResponse, StreamingResponse
 from firebase_models import Place, User
-from fastapi import Request, Form, Depends, File, UploadFile
+from fastapi import Request, Form, Depends, File
 from Util import create_user, parse_user, authenticate_user, create_access_token, get_current_user, \
     calculate_boundaries
 from typing import Annotated
@@ -51,8 +51,7 @@ async def get_place_by_name(place_id: str):
 
 
 @app.post("/upload-image")
-async def upload_image(image: bytes, place_id: Annotated[str, Form()],
-                       image_extension: Annotated[str, Form()]):
+async def upload_image(image: bytes = File(), place_id: str = Form(), image_extension: str = Form()):
     print(image)
     blobs = bucket.list_blobs(prefix=place_id)
     s = sum(1 for _ in blobs)
