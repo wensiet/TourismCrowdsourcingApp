@@ -39,22 +39,25 @@ async def add_place(title: Annotated[str, Form()], rating: Annotated[float, Form
     return JSONResponse(content={f"{place.id}": f"{title}"}, status_code=200)
 
 
+@app.get("/get-place/{place_id}")
+async def get_place_by_name(place_id: str):
+    # Executing the query
+    places_query = (
+        Place.collection.filter("id", "==", place_id)
+    ).fetch()
+
+    for p in places_query:
+        return p.to_dict()
+
+
 @app.post("/upload-image")
-async def upload_image(image: bytes = File(), place_id: str = Form(), image_extension: str = Form()):
+async def upload_image(image, place_id: str = Form(), image_extension: str = Form()):
+    print(image)
     blobs = bucket.list_blobs(prefix=place_id)
     s = sum(1 for _ in blobs)
     file_name = f"{place_id}/{s}.{image_extension}"
     blob = bucket.blob(file_name)
     blob.upload_from_string(image, content_type=f"image/{image_extension}")
-
-
-@app.get("/get-images/{place_id}")
-async def get_images(place_id: str):
-    result = {}
-    for b in bucket.list_blobs(prefix=place_id):
-        filename = str(b.name)
-        result[filename[filename.find("/") + 1:len(filename)]] = str(b.download_as_bytes())
-    return result
 
 
 @app.get("/get-images-list/{place_id}")
@@ -66,17 +69,6 @@ async def get_images(place_id: str):
         filename = str(b.name)
         result["image_ref"].append(filename[filename.find("/") + 1:len(filename)])
     return result
-
-
-@app.get("/get-place/{place_id}")
-async def get_place_by_name(place_id: str):
-    # Executing the query
-    places_query = (
-        Place.collection.filter("id", "==", place_id)
-    ).fetch()
-
-    for p in places_query:
-        return p.to_dict()
 
 
 @app.get("/images/{place_id}/{image_name}")
@@ -92,26 +84,22 @@ async def image_by_place_id(place_id: str, image_name: str):
             return StreamingResponse(stream_image(), media_type=b.content_type)
 
 
-@app.post("/add-user")
-async def add_user(request: Request):
-    data = dict(await request.form())
-    queried_user = parse_user(data)
-    queried_user.save()
-    return JSONResponse(content={"Received content": f"{queried_user.name}"}, status_code=200)
-
-
-@app.get("/get-user/{name}")
-async def get_user_by_name(name: str):
+@app.get("/get-user/{email}")
+async def get_user_by_name(email: str):
     # Executing the query
     users_query = (
-        User.collection.filter("name", "==", name)
+        User.collection.filter("email", "==", email)
     ).fetch()
 
+    result = {}
+
     for p in users_query:
-        print(p)
+        result[p.id] = p.email
+
+    return result
 
 
-@app.get("/register")
+@app.post("/register")
 async def register(email: Annotated[str, Form()], password: Annotated[str, Form()]):
     existing_user = User.collection.filter("email", "==", email).get()
     if existing_user:
