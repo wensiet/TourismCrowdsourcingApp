@@ -21,7 +21,8 @@ def create_access_token(user):
 
     access_token = jwt.encode(payload,
                               secret_key,
-                              algorithm="HS256")
+                              algorithm="HS256"
+                              )
 
     return access_token
 
@@ -30,8 +31,6 @@ def create_user(user_data: User):
     hashed_password = pwd_context.hash(user_data.password)
     user = User(
         email=user_data.email,
-        name=user_data.name,
-        surname=user_data.surname,
         password=hashed_password
     )
     user.save()
