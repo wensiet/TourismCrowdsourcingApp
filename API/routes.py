@@ -51,7 +51,7 @@ async def get_place_by_name(place_id: str):
 
 
 @app.post("/upload-image")
-async def upload_image(image, place_id: str = Form(), image_extension: str = Form()):
+async def upload_image(image: File(), place_id: Form(), image_extension: Form()):
     print(image)
     blobs = bucket.list_blobs(prefix=place_id)
     s = sum(1 for _ in blobs)
