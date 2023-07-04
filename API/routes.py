@@ -51,7 +51,7 @@ async def get_place_by_name(place_id: str):
 
 
 @app.post("/upload-image")
-async def upload_image(image: Annotated[UploadFile, Form()], place_id: Annotated[str, Form()],
+async def upload_image(image: UploadFile, place_id: Annotated[str, Form()],
                        image_extension: Annotated[str, Form()]):
     print(image)
     blobs = bucket.list_blobs(prefix=place_id)
