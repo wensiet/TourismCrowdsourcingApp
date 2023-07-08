@@ -13,7 +13,7 @@ def test_random_place_creation():
     latitude = fake.latitude()
     longitude = fake.longitude()
     approved = fake.boolean()
-    image_references = [fake.url() for _ in range(fake.random_int(min=1, max=5))]
+
 
     place = Place(
         title=title,
@@ -22,7 +22,7 @@ def test_random_place_creation():
         user_ids=user_ids,
         geo_point=GP(latitude=latitude, longitude=longitude),
         approved=approved,
-        image_references=image_references
+
     )
 
     assert place.title == title
@@ -32,7 +32,7 @@ def test_random_place_creation():
     assert place.geo_point.latitude == latitude
     assert place.geo_point.longitude == longitude
     assert place.approved == approved
-    assert place.image_references == image_references
+
 
 
 def test_random_place_to_dict():
@@ -43,7 +43,7 @@ def test_random_place_to_dict():
         user_ids=[fake.uuid4() for _ in range(fake.random_int(min=1, max=5))],
         geo_point=GP(latitude=fake.latitude(), longitude=fake.longitude()),
         approved=fake.boolean(),
-        image_references=[fake.url() for _ in range(fake.random_int(min=1, max=5))]
+
     )
 
     place_dict = place.to_dict()
@@ -56,7 +56,7 @@ def test_random_place_to_dict():
     assert place_dict["user_ids"] == place.user_ids
     assert place_dict["geo_point"] == f"{place.geo_point.latitude}, {place.geo_point.longitude}"
     assert place_dict["approved"] == place.approved
-    assert place_dict["photo_links"] == place.image_references
+
 
 
 def test_random_place_repr():
@@ -67,7 +67,7 @@ def test_random_place_repr():
     latitude = fake.latitude()
     longitude = fake.longitude()
     approved = fake.boolean()
-    image_references = [fake.url() for _ in range(fake.random_int(min=1, max=5))]
+
 
     place = Place(
         title=title,
@@ -76,13 +76,12 @@ def test_random_place_repr():
         user_ids=user_ids,
         geo_point=GP(latitude=latitude, longitude=longitude),
         approved=approved,
-        image_references=image_references
+
     )
 
     place_repr = repr(place)
 
     expected_repr = f"Place(title={title}, rating={rating}, description={description}, " \
-                    f"user_ids={user_ids}, geo_point={latitude} {longitude}, " \
-                    f"approved={approved}, photo_links={image_references})"
+                    f"user_ids={user_ids}, geo_point={latitude} {longitude}"
 
     assert place_repr == expected_repr

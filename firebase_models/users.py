@@ -1,63 +1,50 @@
 from fireo.models import Model, NestedModel
-from fireo.fields import TextField, NumberField, BooleanField, ListField
+from fireo.fields import TextField, BooleanField, ListField
 from firebase_models.date import Date
 from firebase_models.comment import Comment
-from validators import users_init_validator
 
 
 class User(Model):
     email: TextField = TextField()
-    name: TextField = TextField()
-    surname: TextField = TextField()
+    nickname: TextField = TextField()
     gender: BooleanField = BooleanField()
     birth_date: NestedModel = NestedModel(Date)
     password: TextField = TextField()
     status: TextField = TextField()
-    users_score: NumberField = NumberField()
     comments: ListField = ListField(NestedModel(Comment))
 
     def __init__(
             self,
             email=None,
-            name=None,
-            surname=None,
+            nickname=None,
             gender=None,
             birth_date=None,
             password=None,
             status=None,
-            users_score=None,
             comments=None,
             **kwargs
     ):
         super().__init__(**kwargs)
         self.email = email
-        self.name = name
-        self.surname = surname
+        self.nickname = nickname
         self.gender = gender
         self.birth_date = birth_date
         self.password = password
         self.status = status
-        self.users_score = users_score
         self.comments = comments
 
     def __repr__(self):
-        return f"User(email={self.email}, name={self.name} {self.surname}, gender={'male' if self.gender else 'female'}, " \
-               f"birth date={self.birth_date.year}.{self.birth_date.month}.{self.birth_date.day}, users score={self.users_score})"
+        return f"User(email={self.email}, nickname={self.nickname}, gender={'male' if self.gender else 'female'}, " \
+               f"birth date={self.birth_date.year}.{self.birth_date.month}.{self.birth_date.day})"
 
     def to_dict(self):
         result = {
-            "name": self.name,
-            "surname": self.surname,
+            "nickname": self.nickname,
             "email": self.email,
             "gender": self.gender,
-            "birth_date": {
-                "year": self.birth_date.year,
-                "month": self.birth_date.month,
-                "day": self.birth_date.day
-            },
+            "birth_date": f"{self.birth_date.day}.{self.birth_date.month}.{self.birth_date.year}",
             "password": self.password,
             "status": self.status,
-            "users_score": self.users_score,
             "comments": [{
                 "reference": el.reference,
                 "text": el.text

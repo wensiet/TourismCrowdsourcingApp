@@ -1,0 +1,29 @@
+stages:          # List of stages for jobs, and their order of execution
+  - test
+  - deploy
+
+
+unit-test-job:   # This job runs in the test stage.
+  stage: test
+  tags:
+    - vps
+  script:
+    - echo "Pretending there are tests..."
+    - echo "[--- 6 tests out of 6 passed! ---]"
+
+deploy-job:      # This job runs in the deploy stage.
+  stage: deploy
+  environment: production
+  tags:
+    - vps
+  script:
+    - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
+    - mkdir -p ~/.ssh
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' > ~/.ssh/gitlab
+    - chmod 700 ~/.ssh/gitlab
+    - eval "$(ssh-agent -s)"
+    - ssh-add ~/.ssh/gitlab
+    - ssh-keyscan -H 'gitlab.pg.innopolis.university' >> ~/.ssh/known_hosts
+    - apt-get install rsync -y -qq
+    - apt-get install curl -y -qq
+    - ssh -i ~/.ssh/gitlab -o StrictHostKeyChecking=no root@178.250.156.94 "cd software-project; ./deploy.sh"

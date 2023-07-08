@@ -2,7 +2,6 @@ from fireo.models import Model
 from fireo.fields import TextField, ListField, NumberField, BooleanField, GeoPoint
 from google.cloud.firestore_v1._helpers import GeoPoint as GP
 from typing import List
-from validators import places_init_validator
 
 
 class Place(Model):
@@ -12,7 +11,6 @@ class Place(Model):
     user_ids: ListField = ListField(TextField())
     geo_point: GeoPoint = GeoPoint()
     approved: BooleanField = BooleanField()
-    image_references: ListField = ListField()
 
     def __init__(
             self,
@@ -21,8 +19,7 @@ class Place(Model):
             description: str = None,
             user_ids: List[str] = None,
             geo_point: GP = None,
-            approved: bool = None,
-            image_references: List[str] = None,
+            approved: bool = False,
             **kwargs
     ):
         super().__init__(**kwargs)
@@ -32,12 +29,11 @@ class Place(Model):
         self.user_ids = user_ids
         self.geo_point = geo_point
         self.approved = approved
-        self.image_references = image_references
 
     def __repr__(self):
         return f"Place(title={self.title}, rating={self.rating}, description={self.description}, " \
                f"user_ids={self.user_ids}, geo_point={self.geo_point.latitude} {self.geo_point.longitude}, " \
-               f"approved={self.approved}, photo_links={self.image_references})"
+               f"approved={self.approved})"
 
     def to_dict(self):
         result = {
@@ -48,7 +44,6 @@ class Place(Model):
             "user_ids": self.user_ids,
             "geo_point": f"{self.geo_point.latitude}, {self.geo_point.longitude}",
             "approved": self.approved,
-            "photo_links": self.image_references
         }
 
         return result

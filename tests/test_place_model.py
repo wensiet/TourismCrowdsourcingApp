@@ -18,7 +18,6 @@ def test_place_to_dict():
         user_ids=["user1", "user2"],
         geo_point=GP(latitude=123.456, longitude=987.654),
         approved=True,
-        image_references=["image1.jpg", "image2.jpg"]
     )
     expected_dict = {
         "id": "123",
@@ -28,7 +27,6 @@ def test_place_to_dict():
         "user_ids": ["user1", "user2"],
         "geo_point": "123.456, 987.654",
         "approved": True,
-        "photo_links": ["image1.jpg", "image2.jpg"]
     }
     assert place.to_dict() == expected_dict
 
@@ -41,9 +39,7 @@ def test_place_representation():
         user_ids=["user1", "user2"],
         geo_point=GP(latitude=123.456, longitude=987.654),
         approved=True,
-        image_references=["image1.jpg", "image2.jpg"]
     )
     expected_repr = "Place(title=Test Place, rating=4.5, description=Sample description, " \
-                    "user_ids=['user1', 'user2'], geo_point=123.456 987.654, approved=True, " \
-                    "photo_links=['image1.jpg', 'image2.jpg'])"
+                    "user_ids=['user1', 'user2'], geo_point=123.456 987.654, approved=True)"
     assert repr(place) == expected_repr
