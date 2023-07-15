@@ -25,6 +25,8 @@ facilitates informed travel decisions.
     - Set up virtual environment
     - Install requirements using **pip install -r requirements.txt**
     - Launch **run.py**
+- ### **Postman collection**
+    - Import [this](Tourism%20app.postman_collection.json) file to Postman
 
 ## Testing
 #### If you do not want to install API on your machine, scan or click the QR.
