@@ -15,3 +15,13 @@ class Date(Model):
         self.year = year
         self.month = month
         self.day = day
+
+    def __repr__(self):
+        return f"{self.day}.{self.month}.{self.year}"
+
+    def to_dict(self):
+        return {
+            "day": self.day,
+            "month": self.month,
+            "year": self.year
+        }

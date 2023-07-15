@@ -1,3 +1,4 @@
+import os
 from datetime import datetime, timedelta
 
 from fastapi import Depends, HTTPException
@@ -10,7 +11,7 @@ import jwt
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 # THIS IS A DEVELOPMENT SECRET KEY
-secret_key = "7779d8f0291698afca259e4c7a9266e6232d5a60bf9412b6f24622609de7063a"
+secret_key = os.environ["SECRET_KEY"]
 
 
 def create_access_token(user):

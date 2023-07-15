@@ -1,0 +1,5 @@
+/admin-sdk.json
+/jwt-secret
+/venv/
+/.idea/
+/.pytest_cache/

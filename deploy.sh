@@ -19,7 +19,6 @@ fi
 
 # Start the Uvicorn server in the background and suppress output
 nohup uvicorn API:app --host 0.0.0.0 --port 8000 > /dev/null 2>&1 &
-
 # Wait for the server to start
 echo "Waiting for the server to start..."
 sleep 5

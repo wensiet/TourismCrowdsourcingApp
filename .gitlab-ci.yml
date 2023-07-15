@@ -1,19 +1,59 @@
-stages:          # List of stages for jobs, and their order of execution
+stages: # List of stages for jobs, and their order of execution
   - test
   - deploy
 
-
-unit-test-job:   # This job runs in the test stage.
+unit-test: # This job runs in the test stage.
   stage: test
-  tags:
-    - vps
+  image: python:3.9
+  rules:
+    - if: '$CI_COMMIT_REF_NAME != "backend"'
+  before_script:
+    # activating venv & installing requirements
+    - echo "Setting up venv..."
+    - python3.9 -m venv tests
+    - source tests/bin/activate
+    - echo "Installing requirements..."
+    - pip install -r requirements.txt
+    - pip install pytest-cov coverage
+    - pip install httpx
+    - echo -E "$GOOGLE_ADMIN_SDK" > admin-sdk.json
+    - echo -E "$ALGOLIA_APP_ID" > algolia-app-id
+    - echo -E "$ALGOLOA_API_KEY" > algolia-api-key
+    - echo "$JWT_SECRET" | tr -d '\r' > jwt-secret
   script:
-    - echo "Pretending there are tests..."
-    - echo "[--- 6 tests out of 6 passed! ---]"
+    # testing
+    - echo "Running pytest..."
+    - pytest --cov=firebase_models tests/test_place_model.py
+    - pytest --cov=firebase_models tests/test_user_model.py
+    - pytest --cov=API tests/test_endpoints.py
+    - coverage report -m
 
-deploy-job:      # This job runs in the deploy stage.
+lint-test: # New lint test job
+  stage: test
+  image: python:3.9
+  rules:
+    - if: '$CI_COMMIT_REF_NAME != "backend"'
+  before_script:
+    # activating venv & installing requirements
+    - echo "Setting up venv..."
+    - python3.9 -m venv tests
+    - source tests/bin/activate
+    - echo "Installing requirements..."
+    - pip install -r requirements.txt
+  script:
+    # linting
+    - echo "Running lint test..."
+    - pip install flake8
+    - flake8 --exit-zero --exclude=API/__pycache__ --ignore=E501 API/
+    - flake8 --exit-zero --exclude=exceptions/__pycache__ --ignore=E501 exceptions/
+    - flake8 --exit-zero --exclude=firebase_models/__pycache__ --ignore=E501 firebase_models/
+    - flake8 --exit-zero --exclude=Util/__pycache__ --ignore=E501 Util/
+
+vps-deployment: # This job runs in the deploy stage.
   stage: deploy
   environment: production
+  rules:
+    - if: '$CI_COMMIT_REF_NAME == "backend"'
   tags:
     - vps
   script:
@@ -26,4 +66,6 @@ deploy-job:      # This job runs in the deploy stage.
     - ssh-keyscan -H 'gitlab.pg.innopolis.university' >> ~/.ssh/known_hosts
     - apt-get install rsync -y -qq
     - apt-get install curl -y -qq
+    - ssh -i ~/.ssh/gitlab -o StrictHostKeyChecking=no root@178.250.156.94 "cd software-project; git pull"
     - ssh -i ~/.ssh/gitlab -o StrictHostKeyChecking=no root@178.250.156.94 "cd software-project; ./deploy.sh"
+
