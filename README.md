@@ -30,53 +30,15 @@ facilitates informed travel decisions.
 
 ## Testing
 #### If you do not want to install API on your machine, scan or click the QR.
-<a href="https://drive.google.com/file/d/1I0OPUTGoFYJz71LWe0v576Ix1R9QKURR/view?usp=sharing"><img alt="apk_QR" height="250" src="http://wensietyt.fvds.ru:8000/images/QR/0.png" width="250"/></a>
+<a href="https://drive.google.com/file/d/1I0OPUTGoFYJz71LWe0v576Ix1R9QKURR/view?usp=sharing"><img alt="apk_QR" height="250" src="https://i.imgur.com/hrrRK7l.png" width="250"/></a>
 
 ## What was done in Python?
 
 The API is fully relies on python.
 
 ## Endpoints
-
-- ### **Contribution**
-    - Each member of our team made a **significant** and **equal** contribution to the development of endpoints
 - ### **Documentation**
     - [Docs](http://wensietyt.fvds.ru:8000/docs)
-
-## General contribution
-
-### **Iskander Shamsutdinov**
-
-- ### **Management**
-    - Tasks distribution
-- ### **Models**
-    - Place model [[source code]](firebase_models/places.py)
-- ### **Util**
-    - Coordinates [[source code]](Util/coordinates.py)
-- ### **React application**
-    - Moderation panel [[source code]](build)
-
-### **Egor Salnikov**
-
-- ### **Testing**
-    - Unit tests [[source code]](tests)
-    - Exceptions [[source code]](exceptions)
-- ### **Models**
-    - Date [[source code]](firebase_models/date.py)
-    - Comment [[source code]](firebase_models/comment.py)
-    - Tags [[source code]](firebase_models/tags.py)
-- ### **Search engine**
-    - Algolia [[extension website]](https://www.algolia.com)
-
-### **Nikita Bagrov**
-
-- ### **Models**
-    - User model [[source code]](firebase_models/users.py)
-- ### **Util**
-    - Authorization [[source code]](Util/authorization.py)
-- ### **CI/CD**
-    - Pipeline [[source code]](.gitlab-ci.yml)
-    - Deployment script [[source code]](deploy.sh)
 
 ## Technological stack
 
